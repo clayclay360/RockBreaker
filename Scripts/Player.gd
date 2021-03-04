@@ -11,10 +11,12 @@ export (float) var fire_rate
 var thrust = Vector2()
 var rotation_dir = 0
 var can_shoot = true
+var lives = 3
 
 var screen_size = Vector2()
 
 signal shoot
+signal dead
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -25,15 +27,21 @@ func change_state(new_state):
 	match new_state:
 		INIT:
 			$CollisionShape2D.disabled = true
+			$Sprite.modulate.a = 0.5
 			pass
 		ALIVE:
 			$CollisionShape2D.disabled = false
+			$Sprite.modulate.a = 1
 			pass
 		INVULNERABLE:
 			$CollisionShape2D.disabled = true
+			$Sprite.modulate.a = 0.5
 			pass
 		DEAD:
 			$CollisionShape2D.disabled = true
+			$Sprite.hide()
+			linear_velocity = Vector2()
+			emit_signal("dead")
 			pass
 
 func _process(delta):
@@ -81,3 +89,22 @@ func _integrate_forces(state):
 
 func _on_GunTimer_timeout():
 	can_shoot = true
+
+func _on_InvulnerabilityTimer_timeout():
+	change_state(ALIVE)
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	$Explosion.hide()
+
+
+func _on_Player_body_entered(body):
+	if body.is_in_group("rocks"):
+		body.explode()
+		$Explosion.show()
+		$Explosion/AnimationPlayer.play("Explosion")
+		$InvulnerabilityTimer.start()
+		lives -= 1
+		if lives <= 0:
+			change_state(DEAD)
+		else:
+			change_state(INVULNERABLE)
