@@ -16,8 +16,12 @@ _global_script_class_icons={
 [application]
 
 config/name="RockBreaker"
-run/main_scene="res://Scenes/Main.tscn"
+run/main_scene="res://Scenes/TitleScreen.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+GameState="*res://Scripts/GameState.gd"
 
 [display]
 

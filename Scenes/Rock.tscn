@@ -21,6 +21,7 @@ script = ExtResource( 1 )
 texture = ExtResource( 2 )
 
 [node name="Explosion" parent="." instance=ExtResource( 3 )]
+frame = 0
 [connection signal="animation_finished" from="Explosion/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 
 [editable path="Explosion"]
