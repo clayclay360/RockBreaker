@@ -8,14 +8,6 @@ func start(pos, dir):
 	rotation = dir
 	velocity = Vector2(speed,0).rotated(dir)
 
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	position += velocity * delta
@@ -34,4 +26,4 @@ func _on_Bullet_body_entered(body):
 func _on_Bullet_area_entered(area):
 	if area.is_in_group("enemies"):
 		area.take_damage(1)
-	queue_free()
+		queue_free()

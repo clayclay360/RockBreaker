@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scripts/Test.gd" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 31, 31 )
+
+[node name="Test" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Ray" type="RayCast2D" parent="."]
+enabled = true
+exclude_parent = false
+
+[node name="Subject" type="RigidBody2D" parent="."]
+position = Vector2( 500, 500 )
+contacts_reported = 2
+contact_monitor = true
+
+[node name="Sprite" type="Sprite" parent="Subject"]
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Subject"]
+shape = SubResource( 1 )

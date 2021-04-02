@@ -1,16 +1,67 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Main.gd" type="Script" id=2]
 [ext_resource path="res://background/space_background.png" type="Texture" id=3]
 [ext_resource path="res://Scenes/Rock.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Scenes/Enemy.tscn" type="PackedScene" id=5]
-[ext_resource path="res://audio/Funky-Gameplay_Looping.ogg" type="AudioStream" id=6]
+[ext_resource path="res://audio/The Rubberband Man (2003 Remaster).ogg" type="AudioStream" id=6]
+[ext_resource path="res://gui/barHorizontal_green_mid 200.png" type="Texture" id=7]
+[ext_resource path="res://gui/barHorizontal_yellow_mid 200.png" type="Texture" id=8]
+[ext_resource path="res://fonts/Orbitron-VariableFont_wght.ttf" type="DynamicFontData" id=9]
 
 [sub_resource type="Curve2D" id=1]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, -77.0157, -90.1502, 0, 0, 0, 0, 1948.51, -96.4998, 0, 0, 0, 0, 1967.56, 1160.72, 0, 0, 0, 0, -73.8409, 1144.85, 0, 0, 0, 0, -77.0157, -90.1502 )
 }
+
+[sub_resource type="StyleBoxTexture" id=2]
+texture = ExtResource( 7 )
+region_rect = Rect2( 0, 0, 200, 26 )
+
+[sub_resource type="StyleBoxTexture" id=3]
+
+[sub_resource type="StyleBoxTexture" id=4]
+texture = ExtResource( 8 )
+region_rect = Rect2( 0, 0, 200, 26 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 100
+font_data = ExtResource( 9 )
+
+[sub_resource type="Animation" id=6]
+resource_name = "idle"
+length = 2.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:custom_colors/font_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.1, 0.3, 0.6, 0.9, 1.1, 1.4, 1.7, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 0, 0, 1 ), Color( 0.14902, 1, 0, 1 ), Color( 0, 0.882353, 1, 1 ), Color( 0, 0.25098, 1, 1 ), Color( 0.521569, 0, 1, 1 ), Color( 1, 0, 0.913725, 1 ), Color( 1, 0, 0.329412, 1 ), Color( 0.921569, 1, 0, 1 ) ]
+}
+
+[sub_resource type="ParticlesMaterial" id=7]
+lifetime_randomness = 0.33
+emission_shape = 2
+emission_box_extents = Vector3( 90, 90, 1 )
+flag_disable_z = true
+direction = Vector3( 1, 1, 1 )
+spread = 154.4
+flatness = 0.77
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 6.0
+initial_velocity_random = 0.48
+orbit_velocity = 0.0
+orbit_velocity_random = 1.0
+linear_accel = -30.77
+angle_random = 1.0
+scale = 0.25
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 2 )
@@ -22,7 +73,7 @@ position = Vector2( 960, 540 )
 texture = ExtResource( 3 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 960, 540 )
+position = Vector2( 920, 544 )
 
 [node name="RockPath" type="Path2D" parent="."]
 curve = SubResource( 1 )
@@ -35,8 +86,104 @@ rotation = -0.00313447
 
 [node name="EnemyTimer" type="Timer" parent="."]
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+[node name="RockSpawnTimer" type="Timer" parent="."]
+wait_time = 10.0
+autostart = true
+
+[node name="GameplayAudio" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 6 )
+volume_db = -5.0
+autoplay = true
+
+[node name="StartPosition" type="Position2D" parent="."]
+position = Vector2( 929.189, 543.513 )
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+margin_left = 614.0
+margin_top = 962.0
+margin_right = 848.0
+margin_bottom = 997.0
+custom_styles/fg = SubResource( 2 )
+custom_styles/bg = SubResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+max_value = 3.0
+value = 3.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AmmoBar" type="ProgressBar" parent="."]
+margin_left = 1001.1
+margin_top = 957.995
+margin_right = 1235.1
+margin_bottom = 992.995
+custom_styles/fg = SubResource( 4 )
+custom_styles/bg = SubResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+max_value = 15.0
+value = 15.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeDisplayLabel" type="Label" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = 1685.35
+margin_top = 46.2906
+margin_right = 1837.35
+margin_bottom = 173.291
+custom_fonts/font = SubResource( 5 )
+text = "0s"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="KillsLabel" type="Label" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = 90.0
+margin_top = 46.0
+margin_right = 242.0
+margin_bottom = 173.0
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.921569, 1, 0, 1 )
+text = "0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="KillsLabel"]
+autoplay = "idle"
+anims/idle = SubResource( 6 )
+
+[node name="GameTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="Particles2D" type="Particles2D" parent="."]
+position = Vector2( 931.652, 536.78 )
+scale = Vector2( 8, 5 )
+emitting = false
+amount = 50
+lifetime = 600.0
+one_shot = true
+speed_scale = 1.98
+explosiveness = 1.0
+randomness = 1.0
+process_material = SubResource( 7 )
+
+[node name="Ray" type="RayCast2D" parent="."]
+enabled = true
+collide_with_areas = true
+collide_with_bodies = false
 [connection signal="dead" from="Player" to="." method="_on_Player_dead"]
+[connection signal="hit" from="Player" to="." method="_on_Player_hit"]
 [connection signal="shoot" from="Player" to="." method="_on_Player_shoot"]
+[connection signal="shoot_missile" from="Player" to="." method="_on_Player_shoot_missile"]
 [connection signal="timeout" from="EnemyTimer" to="." method="_on_EnemyTimer_timeout"]
+[connection signal="timeout" from="RockSpawnTimer" to="." method="_on_RockSpawnTimer_timeout"]
+[connection signal="timeout" from="GameTimer" to="." method="_on_GameTimer_timeout"]

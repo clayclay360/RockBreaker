@@ -1,6 +1,7 @@
 extends Area2D
 
 signal shoot
+signal dead
 
 export (PackedScene) var Bullet
 export (int) var speed = 150
@@ -23,36 +24,33 @@ func _process(delta):
 	if(follow.unit_offset > 1):
 		queue_free()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-
 func _on_AnimationPlayer_animation_finished(anim_name):
 	queue_free()
 
 
 func _on_Timer_timeout():
 	shoot_pulse(3, .15)
-	
+
 func shoot():
 	var dir = target.global_position - global_position
 	dir = dir.rotated(rand_range(-0.1,0.1)).angle()
 	emit_signal("shoot", Bullet, global_position, dir)
-	
+
 func shoot_pulse(rounds, delay):
 	for i in range(rounds):
 		shoot()
+		$BulletAudio.play()
 		yield(get_tree().create_timer(delay), "timeout")
-	
+
 func take_damage(amount):
 	health -= amount
 	$AnimationPlayer.play("flash")
 	if health <= 0:
 		explode()
+		emit_signal("dead")
 	yield($AnimationPlayer, "animation_finished")
 	$AnimationPlayer.play("rotate")
-		
+
 func explode():
 	speed = 0
 	$Timer.stop()

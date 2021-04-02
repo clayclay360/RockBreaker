@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://enemy/enemy_saucer.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Explosion.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scripts/Enemy.gd" type="Script" id=3]
 [ext_resource path="res://Scenes/EnemyPaths.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Scenes/EnemyBullet.tscn" type="PackedScene" id=5]
+[ext_resource path="res://audio/enemy_laser.wav" type="AudioStream" id=6]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 36.9461
@@ -68,6 +69,10 @@ wait_time = 2.0
 autostart = true
 
 [node name="EnemyPaths" parent="." instance=ExtResource( 4 )]
+
+[node name="BulletAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 6 )
+volume_db = -20.0
 [connection signal="body_entered" from="." to="." method="_on_Enemy_body_entered"]
 [connection signal="animation_finished" from="Explosion/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

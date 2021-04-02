@@ -19,7 +19,7 @@ func start(pos, velocity, _size):
 	linear_velocity = velocity
 	angular_velocity = rand_range(-1.5,1.5)
 	$Explosion.scale = Vector2(.75,.75) * size
-	
+
 func explode():
 	layers = 0
 	$Sprite.hide()
@@ -27,7 +27,7 @@ func explode():
 	emit_signal("exploded", size, radius, position, linear_velocity)
 	linear_velocity = Vector2()
 	angular_velocity = 0
-	
+
 func _integrate_forces(state):
 	var xform = state.get_transform()
 	if xform.origin.x > screen_size.x:

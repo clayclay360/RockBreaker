@@ -20,6 +20,10 @@ func _on_EnemyBullet_body_entered(body):
 	if body.name == "Player":
 		body.take_damage(1)
 		queue_free()
+	if body.is_in_group("rocks"):
+		body.explode()
+		queue_free()
 
 func _on_EnemyBullet_area_entered(area):
-	pass
+	if area.is_in_group("forcefield"):
+		queue_free()
