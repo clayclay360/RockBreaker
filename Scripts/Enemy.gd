@@ -46,6 +46,7 @@ func shoot_pulse(rounds, delay):
 		$BulletAudio.play() # play the bullet audio
 		yield(get_tree().create_timer(delay), "timeout") # wait for a certain amount of seconds
 
+# take damage function
 func take_damage(amount):
 	health -= amount # subtract health by amount
 	$AnimationPlayer.play("flash") # play the animation flash
@@ -55,6 +56,7 @@ func take_damage(amount):
 	yield($AnimationPlayer, "animation_finished") # wait for the animation to finish to proceed
 	$AnimationPlayer.play("rotate") # play the rotate animation
 
+# explode function
 func explode():
 	speed = 0 # set speed to zero
 	$Timer.stop() # stop the timer
@@ -64,6 +66,7 @@ func explode():
 	$Explosion/AnimationPlayer.play("Explosion") # play the explosion animation
 
 
+# on body entered function
 func _on_Enemy_body_entered(body):
 	if body.name == "Player":
 		pass
