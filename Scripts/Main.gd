@@ -19,7 +19,7 @@ func _ready():
 		spawn_rock(3) # run the spawn rock function with the argument of 3
 	$GameplayAudio.play(GameState.audio_time + 1) # play the game play audio and start the audio at the given time
 
-
+# spawn rock function
 func spawn_rock(size, pos = null, vel = null):
 	if !pos:
 		$RockPath/RockSpawn.set_offset(randi()) # set the rock spawn off set to a random number
@@ -39,16 +39,19 @@ func _process(delta):
 	var mouse_pos = get_global_mouse_position() # get the global mouse position and store it inside the local variable mouse_pos
 	$Ray.set_cast_to(mouse_pos) # run the set_cast_to function of the 2D ray with the agrument of the mouse_pos
 
+# player shoot function
 func _on_Player_shoot(bullet, pos, dir):
 	var b = bullet.instance() # create bullet instance
 	b.start(pos,dir) # call the start function of the bullet instance with the following agruments 
 	add_child(b) # add the bullet instance into the scene 
-	
+
+# enemy shoot function
 func _on_Enemy_shoot(bullet, pos, dir):
 	var b = bullet.instance() # create bullet instance
 	b.start(pos,dir) # call the start function of the bullet instance with the following agruments
 	add_child(b) # add the bullet instance into the scene
 
+# rock exploded function
 func _on_Rock_exploded(size, radius, pos, vel):
 	if size <= 1:
 		return
@@ -58,6 +61,7 @@ func _on_Rock_exploded(size, radius, pos, vel):
 		var newvel = dir * vel.length() * 1.1 # the new velocity equals the direction multiplied by the veloicties length
 		spawn_rock(size - 1, newpos, newvel) # run the spawn rock function with the new variables as agruments
 
+# enemy timer timeout function
 func _on_EnemyTimer_timeout():
 	var e = Enemy.instance() # create enemy instance
 	add_child(e) # add enemy instance into the scene
@@ -65,33 +69,41 @@ func _on_EnemyTimer_timeout():
 	e.connect("shoot",self,"_on_Enemy_shoot") # connect signal shoot from enemy to main script
 	e.connect("dead", self,"_add_kill_score") # connect signal dead from enemy to main script
 
+# player dead function
 func _on_Player_dead():
 	yield(get_tree().create_timer(1), "timeout") # wait for 1 sec
 	get_tree().change_scene("res://Scenes/TitleScreen.tscn") # load title screen
 	GameState.audio_time = $GameplayAudio.get_playback_position() # get the gameplay audio position and store it into the audio time variable
 
+# rock spawn timer timeout function
 func _on_RockSpawnTimer_timeout():
 	spawn_rock(2) # spawn rock with the argument of 2
 
+#player hit function
 func _on_Player_hit():
 	$HealthBar.value = $Player.lives # set the health bar value to the number of lives the player has 
 
+# ammo ui function
 func ammo_ui():
 	$AmmoBar.value = $Player.ammo_count # set the ammo bar value to the number of ammo the player has
 
+# get players high score function
 func get_players_high():
 	if game_time > GameState.high_score:
 		GameState.high_score = game_time # set the high score to the game time number 
 
+# game timer function
 func _on_GameTimer_timeout():
 	game_time += 1 # add one to the game time
 	$TimeDisplayLabel.text = String(game_time) + "s" # display the game time in the display label text
 
+# add kill score function
 func _add_kill_score():
 	print("killed") # print killed
 	kills += 1 # add one to kills
 	$KillsLabel.text = String(kills) # display the number of kills in the kill label text
 
+# player missile function
 func _on_Player_shoot_missile(missile, pos, dir, target):
 	var m = missile.instance() # create a missile instance 
 	add_child(m) # add missile to the scene
