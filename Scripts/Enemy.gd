@@ -10,14 +10,15 @@ export (int) var health = 3
 var follow
 var target = null
 
-# Called when the node enters the scene tree for the first time.
+# call this function when the node enters the scene
 func _ready():
 	$Sprite.frame = randi()%3
 	var path = $EnemyPaths.get_children()[randi()%$EnemyPaths.get_child_count()]
 	follow = PathFollow2D.new()
 	path.add_child(follow)
 	follow.loop = false
-
+	
+# call this function every frame
 func _process(delta):
 	follow.offset += speed * delta
 	position = follow.position
